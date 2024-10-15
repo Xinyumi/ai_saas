@@ -9,10 +9,13 @@ import { getImageById } from "@/lib/actions/image.actions";
 
 const Page = async ({ params: { id } }: SearchParamProps) => {
   const { userId } = auth();
+  let user;
 
-  if (!userId) redirect("/sign-in");
+  if (userId) {
+    user = await getUserById(userId);
+  }
 
-  const user = await getUserById(userId);
+
   const image = await getImageById(id);
 
   const transformation =
@@ -25,9 +28,9 @@ const Page = async ({ params: { id } }: SearchParamProps) => {
       <section className="mt-10">
         <TransformationForm
           action="Update"
-          userId={user._id}
+          userId={user?._id}
           type={image.transformationType as TransformationTypeKey}
-          creditBalance={user.creditBalance}
+          creditBalance={user?.creditBalance}
           config={image.config}
           data={image}
         />
